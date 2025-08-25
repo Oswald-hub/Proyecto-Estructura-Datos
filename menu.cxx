@@ -3,10 +3,15 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <fstream>
 #include "menu.hxx"
 // cd "C:\Users\Elvia\Downloads\taller_1_complejidad_archivos\nuevo" && g++ -Wall -o programa *.cxx && programa
 
 using namespace std;
+
+void break_line(){
+    cout<<endl<<"--------------------------------------------------"<<endl;
+}
 
 void mostrarMenu()// funcion para mostrar el menu
 {
@@ -16,7 +21,8 @@ void mostrarMenu()// funcion para mostrar el menu
     cout << "Escriba '$ayuda' para visualizar todos los comandos. \n";
 
     string linea; // variable que captura lo que escribe el usuario
-
+    ifstream archivo;
+    vector<Secuencia> secuenciasarchivo;
     while (true) {
         cout << "$ ";
 
@@ -54,8 +60,26 @@ void mostrarMenu()// funcion para mostrar el menu
         switch (num) {
             case 1: // cargar
                 if (parametros.size() == 2) {  // si el vector parametros tiene 2 posiciones quiere decir que tiene el comando y el parametro
-                    //cout << "Ejecutando: cargar " << parametros[1] << endl;
-                    cout << "nombre_archivo no se encuentra o no puede leerse."<<endl; // e la segunda posicion esta el parametro
+                    bool apertura = aperturaArchivo(archivo, parametros[1]);
+                    if(apertura){
+                        secuenciasarchivo = leerFasta(archivo);
+                        if (secuenciasarchivo.empty()){
+                            break_line();
+                            cout<<endl<<"Mmmmmmmmmmmmmmm"<<endl;
+                            break_line();
+                        }else{
+                            break_line();
+                            cout<<"Funcionaaaaaaaaaa!";
+                            break_line();
+                            for(Secuencia s : secuenciasarchivo){
+                                s.imprimir();
+                            }
+                        }                      
+                        break_line();
+                        cout<<"El tamano de secuencias que hay es: "<<secuenciasarchivo.size();
+                        break_line();
+                    }
+                    //cout << "nombre_archivo no se encuentra o no puede leerse."<<endl; // e la segunda posicion esta el parametro
                 } else if (parametros.size() < 2) { //si tine 1 o menos parametros quiere decir que le falta el parametro
                     cout << "Error: El comando 'cargar' solo permite un parametro de entrada, nombre de archovo.\n";
                     cout << "Uso: cargar nombre_archivo.txt\n";
@@ -254,4 +278,37 @@ int identificarComando(const string& comando) { //compara la primera palabra del
     if (comando == "base_remota") return 10;// compara la funcion base remota
     if (comando == "ayuda") return 11;// compara la funcion ayuda.
     return -1; // retorna -1 si no coincide el token con la lista de comandos
+}
+
+bool aperturaArchivo( ifstream &archivo, const string nombreArchivo){
+    archivo.open(nombreArchivo);
+    return archivo.is_open();
+}
+
+vector<Secuencia> leerFasta(ifstream &archivo) {
+    
+    string linea, nombre, contenido;
+    vector<Secuencia> lista;
+   
+    
+    while (getline(archivo, linea)) {
+        if (linea.empty()) continue;
+
+        if (linea[0] == '>') {
+            // Si ya había contenido, guardamos la secuencia anterior
+            if (!nombre.empty()) {
+                lista.emplace_back(nombre, contenido);
+                contenido.clear();
+            }
+            nombre = linea.substr(1); // quitar el '>'
+        } else {
+            contenido += linea; // concatenar secuencia
+        }
+    }
+
+    // Guardar la última secuencia
+    if (!nombre.empty()) {
+        lista.emplace_back(nombre, contenido);
+    }
+    return lista;
 }

@@ -6,15 +6,50 @@
 
 using namespace std;
 
+void break_line();
+
+
+class Secuencia {
+    public:
+        std::string nombre;   // nombre de la secuencia (>Identificador)
+        std::string adn;      // secuencia como string
+
+        Secuencia(const std::string &nom, const std::string &contenido) {
+            nombre = nom;
+            adn = contenido; // copiamos directamente
+        }
+
+        void imprimir() const {
+            break_line();
+            std::cout << ">" << nombre << "\n";
+            std::cout << adn;
+            break_line();
+        }
+
+        // Método extra: buscar subsecuencia en el ADN
+        void buscarSubsecuencia(const std::string &sub) const {
+            size_t pos = adn.find(sub);
+            if (pos != std::string::npos) {
+                std::cout << "Subsecuencia \"" << sub << "\" encontrada en posición " << pos << " en " << nombre << "\n";
+            } else {
+                std::cout << "Subsecuencia \"" << sub << "\" NO encontrada en " << nombre << "\n";
+            }
+        }
+};
+
 // Función principal del menú - controla el flujo del programa
 void mostrarMenu();
 
-// Función para identificar el comando ingresado por el usuario
+vector<string> parsearComando(const string& linea);
+
 // Retorna un número que corresponde al comando (1-10) o -1 si no existe
 int identificarComando(const string& comando);
 
-// Función para parsear el comando completo y extraer todos los parámetros
-// Retorna un vector donde el primer elemento es el comando y los siguientes son los parámetros
-vector<string> parsearComando(const string& linea);
+bool aperturaArchivo( ifstream &archivo, const string nombreArchivo);
+
+vector<Secuencia> leerFasta(ifstream &archivo);
+
+
+
 
 #endif
