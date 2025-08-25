@@ -24,8 +24,8 @@ void mostrarMenu()// funcion para mostrar el menu
     ifstream archivo;
     vector<Secuencia> secuenciasarchivo;
     while (true) {
-        cout << "$ ";
-
+        cout << "$";
+        string comando;
         if (!getline(cin, linea)) {// captura lo que escribe el usuario
             cout << "Error al leer el comando.\n";
             continue;
@@ -36,14 +36,20 @@ void mostrarMenu()// funcion para mostrar el menu
         }
 
         vector<string> parametros = parsearComando(linea);  //vector que contiene el comando y los parametros
-
         if (parametros.empty()) { // por si el vector quedo vacio
             cout << "No se ingreso ningun comando valido.\n";
             continue;
         }
 
-        string comando = parametros[0]; // la primera posicion  siempre sera el comando
-
+        if(parametros.size()>1){
+            comando = parametros[0]; // la primera posicion  siempre sera el comando
+            string arg = parametros[1];
+            cout<<endl<<"Comando: "<<comando<<endl<<"Argumento: "<<arg<<endl;
+        }else{
+            comando = parametros[0]; // la primera posicion  siempre sera el comando
+            cout<<endl<<"Comando: "<<comando<<endl;
+        }
+        
         // Verificar si es comando de salida
         if (comando == "salir") {
                 if(parametros.size() == 1){
@@ -53,31 +59,24 @@ void mostrarMenu()// funcion para mostrar el menu
             cout << "Uso: 'salir'\n";
         }
         }
-
-
         int num = identificarComando(comando); // la funcion identifica dependiendo lo que escriba el usuario cual comando es
-
         switch (num) {
-            case 1: // cargar
-                if (parametros.size() == 2) {  // si el vector parametros tiene 2 posiciones quiere decir que tiene el comando y el parametro
+            case 1:{
+                 if (parametros.size() == 2) {  // si el vector parametros tiene 2 posiciones quiere decir que tiene el comando y el parametro
                     bool apertura = aperturaArchivo(archivo, parametros[1]);
                     if(apertura){
                         secuenciasarchivo = leerFasta(archivo);
+                        archivo.close();   
                         if (secuenciasarchivo.empty()){
                             break_line();
-                            cout<<endl<<"Mmmmmmmmmmmmmmm"<<endl;
+                            cout<<endl<<"nombre_archivo no contiene ninguna secuencia."<<endl;
                             break_line();
                         }else{
                             break_line();
-                            cout<<"Funcionaaaaaaaaaa!";
+                            cout<<secuenciasarchivo.size()<<" secuencias cargadas correctamente desde "<<parametros[1];
                             break_line();
-                            for(Secuencia s : secuenciasarchivo){
-                                s.imprimir();
-                            }
                         }                      
-                        break_line();
-                        cout<<"El tamano de secuencias que hay es: "<<secuenciasarchivo.size();
-                        break_line();
+                        
                     }
                     //cout << "nombre_archivo no se encuentra o no puede leerse."<<endl; // e la segunda posicion esta el parametro
                 } else if (parametros.size() < 2) { //si tine 1 o menos parametros quiere decir que le falta el parametro
@@ -88,17 +87,24 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: cargar nombre_archivo.txt\n";
                 }
                 break;
-
-            case 2: //Listar secuencias
+            }
+            case 2:{
                 if (parametros.size() == 1) { // solo es un comando , no hay parametros
-                    cout << "(no hay secuencias cargadas) No hay secuencias cargadas en memorias" << endl;
+                    if(!secuenciasarchivo.empty()){
+                        for(Secuencia &sec : secuenciasarchivo){
+                            contarBases(sec);
+                        }
+                    } else {
+                        cout << "(no hay secuencias cargadas) No hay secuencias cargadas en memorias" << endl;
+                    }
+
                 } else {
                     cout << "Error: El comando 'listar_secuencias' no acepta parametros.\n";
                     cout << "Uso: listar_secuencias\n";
                 }
                 break;
-
-            case 3: //histograma
+            }
+            case 3:{//histograma
                 if (parametros.size() == 2) { // contiene comando y parametro
                     cout << "(la secuencia no existe) Secuencia inválida." << parametros[1] << endl;
                 } else if (parametros.size() < 2) { // falta el parametro para histograma
@@ -109,8 +115,8 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: histograma descripcion_secuencia\n";
                 }
                 break;
-
-            case 4:// es_subsecuencia
+            }
+            case 4:{// es_subsecuencia
                 if (parametros.size() == 2) { // si contiene comando y parametro
                     cout << "(no hay secuencias cargadas) No hay secuencias cargadas en memoria." << parametros[1] << endl;
                 } else if (parametros.size() < 2) {// faltan parametros
@@ -121,8 +127,8 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: es_subsecuencia ACGT\n";
                 }
                 break;
-
-            case 5://enmascarar
+            } 
+            case 5:{//enmascarar
                 if (parametros.size() == 2) {// si posee comandos y parametros
                     cout << "(no hay secuencias cargadas) No hay secuencias cargadas en memoria." << parametros[1] << endl;
                 } else if (parametros.size() < 2) {// no posee los parametros correspondientes
@@ -133,8 +139,8 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: enmascarar ACGT\n";
                 }
                 break;
-
-            case 6://guardar
+            }
+            case 6:{//guardar
                 if (parametros.size() == 2) { // recibe parametros y comandos
                     cout << "(problemas en archivo) Error guardando en nombre_archivo ." << parametros[1] << endl;
                 } else if (parametros.size() < 2) {// no posee un parametro correcto
@@ -145,8 +151,8 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: guardar nombre_archivo.txt\n";
                 }
                 break;
-
-            case 7: //codificar
+            }
+            case 7:{ //codificar
                 if (parametros.size() == 2) {// recibe el respectivo parametro y comando
                     cout << "(mensaje de error) No se pueden guardar las secuencias cargadas en " << parametros[1] <<".fabin "<< endl;
                 } else if (parametros.size() < 2) {// no obtiene los parametros necesarios
@@ -157,8 +163,8 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: codificar archivo.fabin\n";
                 }
                 break;
-
-            case 8://decodificar
+            }
+            case 8:{//decodificar
                 if (parametros.size() == 2) { // recibe parametros y comandos
                     cout << "(mensaje de error) No se pueden cargar las secuencias desde " << parametros[1] << ".fabin"<<endl;
                 } else if (parametros.size() < 2) { // no recibe el parametro necesario
@@ -169,8 +175,8 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: decodificar archivo.fabin\n";
                 }
                 break;
-
-            case 9://ruta mas corta
+            }
+            case 9:{//ruta mas corta
                 if (parametros.size() == 6) { // recibe los parametros y comandos
                     try {
                         string descripcion = parametros[1]; // se le asigna una posicion del array en [i] al atributo descripcion.
@@ -194,8 +200,8 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: ruta_mas_corta descripcion_secuencia i j x y\n";
                 }
                 break;
-
-            case 10://base_remota
+            }
+            case 10:{//base_remota
                 if (parametros.size() == 4) { // recibe el comando y los parametros
                     try {
                         string descripcion = parametros[1]; // se le asigna una posicion del array a la variable 'descripcion'
@@ -216,8 +222,8 @@ void mostrarMenu()// funcion para mostrar el menu
                     cout << "Uso: base_remota descripcion_secuencia i j\n";
                 }
                 break;
-
-            case 11: // Comando ayuda
+            }
+            case 11:{// Comando ayuda
 
                 if(parametros.size()>= 2){
                     cout << "Error: El comando 'ayuda' solo requiere 1 parametro" << endl;
@@ -243,7 +249,7 @@ void mostrarMenu()// funcion para mostrar el menu
                 cout << "=================================\n\n";
                 }
                 break;
-
+            }
             default:
                 cout << "Comando no reconocido: '" << comando << "' Escriba el comando ayuda para visualizar los comandos. \n";
                 break;
@@ -286,12 +292,11 @@ bool aperturaArchivo( ifstream &archivo, const string nombreArchivo){
 }
 
 vector<Secuencia> leerFasta(ifstream &archivo) {
-    
-    string linea, nombre, contenido;
     vector<Secuencia> lista;
-   
-    
+    string linea, nombre, contenido;
+
     while (getline(archivo, linea)) {
+        //cout << linea << endl;  
         if (linea.empty()) continue;
 
         if (linea[0] == '>') {
@@ -305,10 +310,25 @@ vector<Secuencia> leerFasta(ifstream &archivo) {
             contenido += linea; // concatenar secuencia
         }
     }
-
-    // Guardar la última secuencia
     if (!nombre.empty()) {
         lista.emplace_back(nombre, contenido);
     }
     return lista;
+}
+
+void contarBases(Secuencia &secuencia){
+    bool contieneGuion = false;
+    int cantidad_giones = 0; 
+    for(char c : secuencia.adn){
+        if(c == '-') {
+            contieneGuion = true;
+            cantidad_giones++;
+        }
+    }
+    if(contieneGuion) {
+        int numeroBases = secuencia.adn.length() - cantidad_giones;
+        cout << "secuencia " << secuencia.nombre << " contiene al menos " << numeroBases << " bases." << endl;
+    } else {
+        cout << "secuencia " << secuencia.nombre << " contiene " << secuencia.adn.length() << " bases." << endl;
+    }
 }

@@ -49,6 +49,8 @@ bool aperturaArchivo( ifstream &archivo, const string nombreArchivo);
 
 vector<Secuencia> leerFasta(ifstream &archivo);
 
+void contarBases(Secuencia &secuencia);
+
 
 
 
