@@ -142,7 +142,13 @@ void mostrarMenu()// funcion para mostrar el menu
             }
             case 6:{//guardar
                 if (parametros.size() == 2) { // recibe parametros y comandos
-                    cout << "(problemas en archivo) Error guardando en nombre_archivo ." << parametros[1] << endl;
+                    if(!secuenciasarchivo.empty()){
+                        bool guardar = guardarArchivo(secuenciasarchivo, parametros[1]);
+                        if (guardar){
+                            cout << "Secuencia guardada correctamente en:" << parametros[1] << endl;
+                            {
+                        else{
+                    cout << "(problemas en archivo) Error guardando en:" << parametros[1] << endl;
                 } else if (parametros.size() < 2) {// no posee un parametro correcto
                     cout << "Error: El comando 'guardar' requiere un nombre de archivo.\n";
                     cout << "Uso: guardar nombre_archivo.txt\n";
@@ -315,6 +321,19 @@ vector<Secuencia> leerFasta(ifstream &archivo) {
     }
     return lista;
 }
+
+bool guardarArchivo(vector<Secuencia>& secuencias, string& nombre){
+ofstream archivo(nombre);
+    if(!archivo.is_open()){
+    return false;
+    }
+    for(int i = 0; i < secuencias.size(); i++){
+    archivo << secuencias[i].nombre << endl;
+    archivo << secuencias[i].adn << endl;    
+        }
+    archivo.close();
+    return true;
+    }
 
 void contarBases(Secuencia &secuencia){
     bool contieneGuion = false;
