@@ -142,9 +142,10 @@ void mostrarMenu() // funcion para mostrar el menu
         { // histograma
             if (parametros.size() == 2)
             { // contiene comando y parametro
-                cout << "(la secuencia no existe) Secuencia inválida." << parametros[1] << endl;
+                string nombre_Secuencia = parametros[1];
+                histograma(secuenciasarchivo, nombre_Secuencia);
             }
-            else if (parametros.size() < 2)
+            else if(parametros.size() < 2)
             { // falta el parametro para histograma
                 cout << "Error: El comando 'histograma' requiere una descripcion de secuencia.\n";
                 cout << "Uso: histograma descripcion_secuencia\n";
@@ -162,7 +163,6 @@ void mostrarMenu() // funcion para mostrar el menu
             if (parametros.size() == 2 && !secuenciasarchivo.empty())
             {
                 string subsecuencia = parametros[1];
-
                 // Contamos cuantas veces aparece la subsecuencia
                 int total = contarSubsecuencias(secuenciasarchivo, subsecuencia);
 
@@ -195,7 +195,6 @@ void mostrarMenu() // funcion para mostrar el menu
             }
             break;
         }
-
         case 5:
         { // enmascarar
             // Verificamos que tenga exactamente 2 parametros y que existan secuencias cargadas
@@ -240,7 +239,6 @@ void mostrarMenu() // funcion para mostrar el menu
 
             break;
         }
-
         case 6:
         { // guardar
             if (parametros.size() == 2)
@@ -408,7 +406,7 @@ vector<string> parsearComando(const string &linea)
         }
     }
 
-    return parametros; // retorna el vector parametros
+    return parametros; // retorna el vector parametros    
 }
 
 int identificarComando(const string &comando)
@@ -549,11 +547,9 @@ int contarSubsecuencias(vector<Secuencia> lista, string subSecuencia)
 void enmascararSubsecuencia(vector<Secuencia> &lista, string subSecuencia)
 {
     vector<Secuencia>::iterator itLst = lista.begin(); // Iterador para recorrer las secuencias
-
     // Recorremos todas las secuencias cargadas
     for (itLst; itLst != lista.end(); itLst++)
     {
-
         // Obtenemos el contenido de la secuencia actual
         string desc = itLst->getADN();
         string::iterator itdesc = desc.begin();
@@ -594,4 +590,38 @@ void enmascararSubsecuencia(vector<Secuencia> &lista, string subSecuencia)
         // Guardamos la secuencia modificada de vuelta en el objeto Secuencia
         itLst->setADN(desc);
     }
+}
+
+
+void histograma(const vector<Secuencia>& listaSecuencias, const string& nombre) {
+    vector<char> bases = {'A','C','G','T','U','R','Y','K','M','S','W','B','D','H','V','N','X','-'};
+    vector<int> conteo(bases.size(), 0);
+
+    const Secuencia* encontrada = nullptr;
+    for (Secuencia seq : listaSecuencias) {
+        if (seq.getNombre() == nombre) {
+            encontrada = &seq;
+            break;
+        }
+    }
+
+    if (!encontrada) {
+        cout << "Secuencia inválida." << endl;
+        return;
+    }
+
+    for (char base : encontrada->adn) {
+        for (int j = 0; j < bases.size(); j++) {
+            if (base == bases[j]) {
+                conteo[j]++;
+                break;
+            }
+        }
+    }
+
+    // Histograma   
+    for (size_t j = 0; j < bases.size(); j++) {
+        cout << bases[j] << " : " << conteo[j] << "\n";
+    }
+
 }

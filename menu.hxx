@@ -66,8 +66,9 @@ void contarBases(Secuencia &secuencia);
 
 int contarSubsecuencias(vector<Secuencia> lista, string subSecuencia);
 
-void enmascararsubsecuencia(vector<Secuencia> lista, string subSecuencia);
+void enmascararSubsecuencia(vector<Secuencia> &lista, string subSecuencia);
 
+void histograma(const vector<Secuencia> &listaSecuencias, const string &nombre);
 
 
 #endif
