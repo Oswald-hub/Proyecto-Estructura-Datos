@@ -214,7 +214,6 @@ void mostrarMenu() // funcion para mostrar el menu
                 {
                     // Llamamos a la funcion que enmascara la subsecuencia
                     enmascararSubsecuencia(secuenciasarchivo, subsecuencia);
-
                     cout << "La subsecuencia '" << subsecuencia
                          << "' fue encontrada " << total << " veces y ha sido enmascarada.\n";
                 }
