@@ -68,6 +68,7 @@ int contarSubsecuencias(vector<Secuencia> lista, string subSecuencia);
 
 void enmascararSubsecuencia(vector<Secuencia> &lista, string subSecuencia);
 
+bool guardarArchivo(vector<Secuencia>& secuencias, string& nombre);
 void histograma(const vector<Secuencia> &listaSecuencias, const string &nombre);
 
 
