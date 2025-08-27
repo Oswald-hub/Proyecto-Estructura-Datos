@@ -35,6 +35,19 @@ class Secuencia {
                 std::cout << "Subsecuencia \"" << sub << "\" NO encontrada en " << nombre << "\n";
             }
         }
+
+        string getNombre(){
+            return this->nombre;
+        }
+        void setNombre(string nombren){
+            this->nombre = nombren;
+        }
+        string getADN(){
+            return this->adn;
+        }
+        void setADN(string adnn){
+            this->adn= adnn;
+        }
 };
 
 // Función principal del menú - controla el flujo del programa
@@ -51,13 +64,7 @@ vector<Secuencia> leerFasta(ifstream &archivo);
 
 void contarBases(Secuencia &secuencia);
 
-int contarSubsecuencias(vector<Secuencia> lista, string subSecuencia);
 
-void enmascararSubsecuencia(vector<Secuencia> lista, string subSecuencia);
-
-bool guardarArchivo(vector<Secuencia>& secuencias, string& nombre);
-
-void histograma(const vector<Secuencia>& listaSecuencias, const string& nombre);
 
 
 #endif
