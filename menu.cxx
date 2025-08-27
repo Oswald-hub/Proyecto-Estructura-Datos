@@ -51,15 +51,11 @@ void mostrarMenu() // funcion para mostrar el menu
         {
             comando = parametros[0]; // la primera posicion  siempre sera el comando
             string arg = parametros[1];
-            cout << endl
-                 << "Comando: " << comando << endl
-                 << "Argumento: " << arg << endl;
+            
         }
         else
         {
-            comando = parametros[0]; // la primera posicion  siempre sera el comando
-            cout << endl
-                 << "Comando: " << comando << endl;
+            comando = parametros[0]; // la primera posicion  siempre sera el comand
         }
 
         // Verificar si es comando de salida
@@ -100,8 +96,9 @@ void mostrarMenu() // funcion para mostrar el menu
                             cout << secuenciasarchivo.size() << " secuencias cargadas correctamente desde " << parametros[1];
                             break_line();
                         }
+                    }else{
+                        cout << "Error: El archivo" << parametros[1] << " no se encuentra o no puede leerse." << endl;
                     }
-                    // cout << "nombre_archivo no se encuentra o no puede leerse."<<endl; // e la segunda posicion esta el parametro
                 }
                 else if (parametros.size() < 2)
                 { // si tine 1 o menos parametros quiere decir que le falta el parametro
